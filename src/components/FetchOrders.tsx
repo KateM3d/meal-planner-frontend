@@ -17,14 +17,34 @@ const getOrders = (setOrder: any) => {
 
 const addOrder = (title: string, setTitle: any, setOrders: any) => {
   if (!title) {
-    console.log("no title");
     return;
   }
 
   axios.post(`${baseUrl}/saveMeal`, { title: title }).then((data) => {
-    console.log(data);
     setTitle("");
     getOrders(setOrders);
   });
 };
-export { getOrders, addOrder };
+
+const editText = (
+  id: string,
+  title: string,
+  setTitle: any,
+  setOrder: any,
+  setEdditing: any
+) => {
+  axios
+    .put(`${baseUrl}/editMeal`, {
+      _id: "64416a9dc87346e9c838e029",
+      title: title,
+    })
+    .then((data) => {
+      console.log(data);
+      setEdditing(false);
+      setTitle(title);
+      console.log(id, title);
+
+      getOrders(setOrder);
+    });
+};
+export { getOrders, addOrder, editText };

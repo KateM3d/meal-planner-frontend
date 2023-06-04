@@ -4,9 +4,11 @@ import { addOrder, getOrders } from "./components/FetchOrders";
 import Orders from "./components/Orders";
 
 interface Order {
-  id: number;
+  _id: string;
   title: string;
   quantity: number;
+  order?: any;
+  setOrders: any;
 }
 
 const App: React.FC = () => {
@@ -17,12 +19,20 @@ const App: React.FC = () => {
     getOrders(setOrders);
   }, []);
 
-  const handleEdit = () => {
-    // Do something when edit is clicked
+  const handleAddClick = () => {
+    addOrder(title, setTitle, setOrders);
   };
 
-  const handleDelete = () => {
-    // Do something when delete is clicked
+  const handleDeleteOrder = (id: string) => {
+    setOrders((prevOrders) => prevOrders.filter((order) => order._id !== id));
+  };
+
+  const handleUpdateOrder = (id: string, newTitle: string) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order._id === id ? { ...order, title: newTitle } : order
+      )
+    );
   };
 
   return (
@@ -34,16 +44,15 @@ const App: React.FC = () => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <button onClick={() => addOrder(title, setTitle, setOrders)}>
-        Order
-      </button>
+      <button onClick={handleAddClick}>Order</button>
 
       {orders.map((order, index) => (
         <Orders
           key={index}
-          text={order.title}
-          editText={handleEdit}
-          deleteText={handleDelete}
+          order={order}
+          deleteOrder={() => handleDeleteOrder(order._id)}
+          updateOrder={(newTitle) => handleUpdateOrder(order._id, newTitle)}
+          setOrders={setOrders}
         />
       ))}
     </div>
